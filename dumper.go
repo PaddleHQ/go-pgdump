@@ -252,7 +252,7 @@ SELECT con.conname AS constraint_name,
 FROM pg_constraint con
 JOIN pg_class rel ON rel.oid = con.conrelid
 JOIN pg_namespace nsp ON nsp.oid = connamespace
-WHERE con.contype = 'p' 
+WHERE con.contype = 'p'
 AND rel.relname = $1
 AND nsp.nspname = 'public';
 `
