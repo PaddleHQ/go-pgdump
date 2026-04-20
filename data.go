@@ -133,7 +133,7 @@ ORDER BY t.typname;`
 	if err != nil {
 		return "", fmt.Errorf("error querying enum types: %w", err)
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	var sb strings.Builder
 	for rows.Next() {
@@ -343,7 +343,7 @@ ORDER BY a.attnum;`, tableName)
 	if err != nil {
 		return "", fmt.Errorf("error querying column comments for %s: %w", tableName, err)
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	for rows.Next() {
 		var colName, colComment string
@@ -378,7 +378,7 @@ ORDER BY extname;`
 	if err != nil {
 		return "", fmt.Errorf("error querying extensions: %w", err)
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	var sb strings.Builder
 	for rows.Next() {

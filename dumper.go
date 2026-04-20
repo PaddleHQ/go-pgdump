@@ -113,7 +113,7 @@ func (d *Dumper) DumpDatabaseToWriter(writer io.Writer, opts *TableOptions) erro
 					return
 				}
 				mx.Lock()
-				io.WriteString(writer, str)
+				_, _ = io.WriteString(writer, str)
 				mx.Unlock()
 			}(table)
 		}
