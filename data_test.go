@@ -13,7 +13,7 @@ func TestGetEnumTypes(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create mock db: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	rows := sqlmock.NewRows([]string{"enum_name", "enum_values"}).
 		AddRow("status", "active,inactive").
@@ -42,7 +42,7 @@ func TestGetExtensions(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create mock db: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	rows := sqlmock.NewRows([]string{"extname"}).
 		AddRow("uuid-ossp").
@@ -71,7 +71,7 @@ func TestGetPartitionBound(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create mock db: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	mock.ExpectQuery(`SELECT pg_get_expr`).
 		WithArgs("orders_2026").
@@ -94,7 +94,7 @@ func TestGetPartitionStrategy(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create mock db: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	mock.ExpectQuery(`FROM pg_partitioned_table`).
 		WithArgs("orders").
@@ -117,7 +117,7 @@ func TestGetCreatePartitionStatement(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create mock db: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	mock.ExpectQuery(`SELECT pg_get_expr`).
 		WithArgs("orders_2026").
@@ -141,7 +141,7 @@ func TestScriptCommentsNoComments(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create mock db: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	mock.ExpectQuery(regexp.QuoteMeta("SELECT obj_description(c.oid)")).
 		WithArgs("customers").
@@ -166,7 +166,7 @@ func TestScriptCommentsWithComments(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create mock db: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	tableCommentRows := sqlmock.NewRows([]string{"comment"}).AddRow("Customer records")
 	mock.ExpectQuery(regexp.QuoteMeta("SELECT obj_description(c.oid)")).

@@ -415,7 +415,7 @@ ORDER BY indexname;`
 	if err != nil {
 		return "", fmt.Errorf("error querying indexes for %s: %w", tableName, err)
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	var sb strings.Builder
 	for rows.Next() {
@@ -448,7 +448,7 @@ ORDER BY con.conname;`
 	if err != nil {
 		return "", fmt.Errorf("error querying foreign keys for %s: %w", tableName, err)
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	var sb strings.Builder
 	for rows.Next() {
@@ -486,7 +486,7 @@ ORDER BY con.conname;`
 	if err != nil {
 		return "", fmt.Errorf("error querying check constraints for %s: %w", tableName, err)
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	var sb strings.Builder
 	for rows.Next() {
