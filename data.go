@@ -524,7 +524,7 @@ ORDER BY con.conname;`
 	if err != nil {
 		return "", fmt.Errorf("error querying unique constraints for %s: %w", tableName, err)
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	var sb strings.Builder
 	for rows.Next() {
