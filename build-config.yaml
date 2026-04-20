@@ -1,0 +1,8 @@
+## Required Code Coverage percentage for the project.
+requiredCoverage: 1
+
+# Enable auto approving and merging of PRs that meet the specified criteria in the automerge.yml workflow.
+# This will allow automated Dependabot PRs, and template PRs to be automatically merged if they pass all checks.
+approveBotEnabled: true
+mergeBotEnabled: true
+automergePaddleConfig: true
