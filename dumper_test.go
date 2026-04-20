@@ -3,7 +3,7 @@ package pgdump_test
 import (
 	"testing"
 
-	pgdump "github.com/JCoupalK/go-pgdump"
+	pgdump "github.com/PaddleHQ/go-pgdump"
 )
 
 func TestNewDumper(t *testing.T) {
