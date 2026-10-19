@@ -405,12 +405,10 @@ AND nsp.nspname = 'public';
 		}
 
 		// Construct the ALTER TABLE statement to add the primary key constraint.
-		pksSQL.WriteString(fmt.Sprintf(
-			"ALTER TABLE %s ADD CONSTRAINT %s %s;\n",
+		fmt.Fprintf(&pksSQL, "ALTER TABLE %s ADD CONSTRAINT %s %s;\n",
 			escapeReservedName(tableName),
 			constraintName,
-			constraintDef,
-		))
+			constraintDef)
 	}
 
 	if err := rows.Err(); err != nil {
