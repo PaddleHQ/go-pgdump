@@ -145,11 +145,9 @@ ORDER BY t.typname;`
 		for i, l := range labels {
 			labels[i] = "'" + l + "'"
 		}
-		sb.WriteString(fmt.Sprintf(
-			"CREATE TYPE %s AS ENUM (%s);\n\n",
+		fmt.Fprintf(&sb, "CREATE TYPE %s AS ENUM (%s);\n\n",
 			escapeReservedName(enumName),
-			strings.Join(labels, ", "),
-		))
+			strings.Join(labels, ", "))
 	}
 
 	if err := rows.Err(); err != nil {
@@ -293,11 +291,9 @@ func getTableDataCopyFormat(db *sql.DB, tableName string) (string, error) {
 	}
 
 	var output strings.Builder
-	output.WriteString(fmt.Sprintf(
-		"COPY %s (%s) FROM stdin;\n",
+	fmt.Fprintf(&output, "COPY %s (%s) FROM stdin;\n",
 		escapeReservedName(tableName),
-		strings.Join(columns, ", "),
-	))
+		strings.Join(columns, ", "))
 	for _, row := range dataRows {
 		output.WriteString(row + "\n")
 	}
@@ -321,11 +317,9 @@ WHERE c.relname = $1 AND n.nspname = 'public';`, tableName).Scan(&tableComment)
 		return "", fmt.Errorf("error querying table comment for %s: %w", tableName, err)
 	}
 	if tableComment != nil && *tableComment != "" {
-		sb.WriteString(fmt.Sprintf(
-			"COMMENT ON TABLE %s IS '%s';\n",
+		fmt.Fprintf(&sb, "COMMENT ON TABLE %s IS '%s';\n",
 			escapeReservedName(tableName),
-			strings.ReplaceAll(*tableComment, "'", "''"),
-		))
+			strings.ReplaceAll(*tableComment, "'", "''"))
 	}
 
 	// Column comments
@@ -350,12 +344,10 @@ ORDER BY a.attnum;`, tableName)
 		if err := rows.Scan(&colName, &colComment); err != nil {
 			return "", fmt.Errorf("error scanning column comment: %w", err)
 		}
-		sb.WriteString(fmt.Sprintf(
-			"COMMENT ON COLUMN %s.%s IS '%s';\n",
+		fmt.Fprintf(&sb, "COMMENT ON COLUMN %s.%s IS '%s';\n",
 			escapeReservedName(tableName),
 			escapeReservedName(colName),
-			strings.ReplaceAll(colComment, "'", "''"),
-		))
+			strings.ReplaceAll(colComment, "'", "''"))
 	}
 
 	if err := rows.Err(); err != nil {
@@ -386,7 +378,7 @@ ORDER BY extname;`
 		if err := rows.Scan(&extName); err != nil {
 			return "", fmt.Errorf("error scanning extension: %w", err)
 		}
-		sb.WriteString(fmt.Sprintf("CREATE EXTENSION IF NOT EXISTS %s;\n", escapeReservedName(extName)))
+		fmt.Fprintf(&sb, "CREATE EXTENSION IF NOT EXISTS %s;\n", escapeReservedName(extName))
 	}
 	if err := rows.Err(); err != nil {
 		return "", fmt.Errorf("error iterating extensions: %w", err)
@@ -456,12 +448,10 @@ ORDER BY con.conname;`
 		if err := rows.Scan(&conName, &conDef); err != nil {
 			return "", fmt.Errorf("error scanning foreign key: %w", err)
 		}
-		sb.WriteString(fmt.Sprintf(
-			"ALTER TABLE %s ADD CONSTRAINT %s %s;\n",
+		fmt.Fprintf(&sb, "ALTER TABLE %s ADD CONSTRAINT %s %s;\n",
 			escapeReservedName(tableName),
 			escapeReservedName(conName),
-			conDef,
-		))
+			conDef)
 	}
 	if err := rows.Err(); err != nil {
 		return "", fmt.Errorf("error iterating foreign keys: %w", err)
@@ -494,12 +484,10 @@ ORDER BY con.conname;`
 		if err := rows.Scan(&conName, &conDef); err != nil {
 			return "", fmt.Errorf("error scanning check constraint: %w", err)
 		}
-		sb.WriteString(fmt.Sprintf(
-			"ALTER TABLE %s ADD CONSTRAINT %s %s;\n",
+		fmt.Fprintf(&sb, "ALTER TABLE %s ADD CONSTRAINT %s %s;\n",
 			escapeReservedName(tableName),
 			escapeReservedName(conName),
-			conDef,
-		))
+			conDef)
 	}
 	if err := rows.Err(); err != nil {
 		return "", fmt.Errorf("error iterating check constraints: %w", err)
@@ -532,12 +520,10 @@ ORDER BY con.conname;`
 		if err := rows.Scan(&conName, &conDef); err != nil {
 			return "", fmt.Errorf("error scanning unique constraint: %w", err)
 		}
-		sb.WriteString(fmt.Sprintf(
-			"ALTER TABLE %s ADD CONSTRAINT %s %s;\n",
+		fmt.Fprintf(&sb, "ALTER TABLE %s ADD CONSTRAINT %s %s;\n",
 			escapeReservedName(tableName),
 			escapeReservedName(conName),
-			conDef,
-		))
+			conDef)
 	}
 	if err := rows.Err(); err != nil {
 		return "", fmt.Errorf("error iterating unique constraints: %w", err)
